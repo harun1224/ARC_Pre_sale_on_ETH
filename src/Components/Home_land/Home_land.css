@@ -2,7 +2,7 @@
     background-image: url(../Assets/background2.png);
     /* height: 700px; */
     padding: 50px 20px  !important;
-    height: 120vh !important;
+    height: 140vh !important;
     /* background-position: 20% 40%; */
     background-repeat: no-repeat !important;
     /* background-color: #484c54 !important; */
@@ -179,6 +179,8 @@
 
 .seeling_tokens{
     position: relative !important;
+    display: flex;
+    justify-content: space-between;
 }
 
 
@@ -451,4 +453,16 @@
 
     color: rgb(255, 255, 255);
     border-radius: 4px;
+}
+
+.title_model{
+   float: right !important;
+   margin-right: auto !important;
+   margin-left: 20rem;
+   cursor: pointer;
+}
+
+.usdc_img{
+    width: 5rem;
+   
 }

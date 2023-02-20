@@ -9,28 +9,28 @@ import { RxCross1 } from "react-icons/rx";
 // import { Button, Modal } from "antd";
 import { AiFillWarning, AiOutlineCheck } from "react-icons/ai";
 
-
-
 import {
   contractabi,
   ico_contract,
-
+  USDCabi,
+  USDC_contract,
   USDTabi,
   USDT_contract,
 } from "../../Contracts/contract";
 import { toast } from "react-toastify";
-import usd from "../Assets/usd.svg";
+import usdt from "../Assets/usd.svg";
+import usdc from "../Assets/usdc.png";
 
 import V16 from "../Assets/ARC.png";
 import WARC from "../Assets/WARC.png";
 import { useSelector } from "react-redux";
 import axios from "axios";
 
-function Buy_tokens(props, connect) {
+
+function Buy_tokens(props, { ethdata }) {
   let { provider, acc, providerType, web3 } = useSelector(
     (state) => state.connectWallet
   );
-
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -41,7 +41,7 @@ function Buy_tokens(props, connect) {
   const [Spinner, setSpinner] = useState(false);
   const [Error, setError] = useState("");
   const [BalanceEth, setBalanceEth] = useState(0);
-  const [getRes, setgetRes] = useState("")
+  const [getRes, setgetRes] = useState("");
 
   const BuyARCWithUSDC = async (data) => {
     try {
@@ -49,11 +49,11 @@ function Buy_tokens(props, connect) {
       let accounts;
       accounts = await web3.eth.getAccounts();
       let ICO_ContractOf = new web3.eth.Contract(contractabi, ico_contract);
-      let TokenContractOf = new web3.eth.Contract(USDTabi, USDT_contract);
+      let TokenContractOf = new web3.eth.Contract(USDCabi, USDC_contract);
 
-      let value = data*1000000;
+      let value = data * 1000000;
       let getValue = await ICO_ContractOf.methods
-        .getARCvalue(value.toString())
+        .getARCvalueperUSDC(value.toString())
         .call();
       setGetEthIput(data);
       value = web3.utils.fromWei(getValue.toString());
@@ -114,18 +114,20 @@ function Buy_tokens(props, connect) {
 
   const buyARC = async () => {
     try {
-      console.log("GetEthValue",GetEthValue);
+      console.log("GetEthValue", GetEthValue);
       setSpinner(true);
       // let acc = await loadWeb3();
       // const web3 = window.web3;
       let ICO_ContractOf = new web3.eth.Contract(contractabi, ico_contract);
-      let USDT_ContractOf = new web3.eth.Contract(USDTabi, USDT_contract);
+      let USDC_ContractOf = new web3.eth.Contract(USDCabi, USDC_contract);
 
-      let value = GetEthIput;
+      let value = GetEthIput*1000000;
 
-      await USDT_ContractOf.methods.approve(ico_contract, value.toString()).send({
-        from: acc,
-      });
+      await USDC_ContractOf.methods
+        .approve(ico_contract, value.toString())
+        .send({
+          from: acc,
+        });
       toast.success("Approved Successfully! 🎉");
       await ICO_ContractOf.methods.BuyARCWithUSDC(value).send({
         from: acc,
@@ -137,11 +139,11 @@ function Buy_tokens(props, connect) {
         amount: web3.utils.toWei(GetEthValue.toString()),
       });
       console.log("res", res.data);
-      if(res.data.successs==true){
-        setgetRes(res.data.hash)
-        toast.success(res.data.msg)
-        props.setModalShow1(false)
-        setIsModalOpen(true)
+      if (res.data.successs == true) {
+        setgetRes(res.data.hash);
+        toast.success(res.data.msg);
+        props.setModalShow1(false);
+        setIsModalOpen(true);
       }
 
       setSpinner(false);
@@ -153,60 +155,70 @@ function Buy_tokens(props, connect) {
 
   const buyWARCwithUSDT = async (data) => {
     try {
-      const web3 = window.web3;
+      // const web3 = window.web3;
+      let accounts;
+      accounts = await web3.eth.getAccounts();
       let ICO_ContractOf = new web3.eth.Contract(contractabi, ico_contract);
-      let TokenContractOf 
-      let USDTContractOf = new web3.eth.Contract(USDTabi, USDT_contract);
+      let TokenContractOf = new web3.eth.Contract(USDTabi, USDT_contract);
 
-      let value = web3.utils.toWei(data.toString());
-      let getValue = await ICO_ContractOf.methods.getWARCvalue(value).call();
+      let value = data * 1000000;
+      let getValue = await ICO_ContractOf.methods
+        .getARCvalueperUSDT(value.toString())
+        .call();
       setGetEthIput(data);
       value = web3.utils.fromWei(getValue.toString());
 
       let BalanceOf = await TokenContractOf.methods
         .balanceOf(ico_contract)
         .call();
+
+      let User_Token_Balance = await TokenContractOf.methods
+        .balanceOf(acc)
+        .call();
       BalanceOf = web3.utils.fromWei(BalanceOf.toString());
 
-      // let accounts;
-      // accounts = await web3.eth.getAccounts();
+      web3.eth.getBalance(ico_contract.toString(), function (err, result) {
+        if (err) {
+          console.log(err);
+        } else {
+          setBalanceEth(web3.utils.fromWei(result, "ether"));
+          console.log("data", web3.utils.fromWei(result, "ether"));
 
-      // let value = data * 1000000;
+          setGetEthValue(value);
+          console.log(value);
+          if (User_Token_Balance < Number(data)) {
+            setError(
+              "Oops! It looks like you don't have enough USDC. Please reduce the amount of USDC and try again."
+            );
+            setGetEthValue(value);
+          }
 
-      // let getValue = await ICO_ContractOf.methods.getTokenUSDT(value).call();
+          // else if (web3.utils.fromWei(result, "ether") < Number(value)) {
+          //   setError(
+          //     "Oops! It looks like contract don't have enough ARC. Please reduce the amount of USDC and try again."
+          //   );
+          //   setGetEthValue(value);
+          // } else {
+          //   setGetEthValue(value);
+          //   setError("");
+          // }
+        }
+      });
 
-      // console.log("getValue", getValue);
-      // setGetUSDTIput(data);
-      // value = web3.utils.fromWei(getValue.toString());
+      // if (BalanceOf > value) {
+      //   setError("Oops! It looks like contract don't have enough Token to pay for that transaction. Please reduce the amount of ETH and try again.")
+      // } else if(BalanceEth < data) {
+      //   setError("Oops! It looks like you don't have enough ETH to pay for that transaction. Please reduce the amount of ETH and try again.")
+      //   setGetEthValue(value);
 
-      // let BalanceOfToken = await TokenContractOf.methods
-      //   .balanceOf(ico_contract)
-      //   .call();
-      // BalanceOfToken = web3.utils.fromWei(BalanceOfToken.toString());
+      // }
+      // else{
+      //   setGetEthValue(value);
+      //   setError("")
 
-      // let BalanceOfUSDT = await USDTContractOf.methods
-      //   .balanceOf(accounts.toString())
-      //   .call();
-
-      // BalanceOfUSDT = (BalanceOfUSDT / 1000000).toString();
-      // console.log("USDT BAlane", data);
-      setGetUSDTValue(value);
-
-      // if (BalanceOfUSDT > data) {
-      //   setGetUSDTValue(value);
-      // } else if (BalanceOfToken > value) {
-      //   setGetUSDTValue(value);
-      //   setError(
-      //     "Oops! It looks like contract don't have enough Token to pay for that transaction. Please reduce the amount of USDT and try again."
-      //   );
-      // } else {
-      //   setGetUSDTValue(value);
-      //   setError(
-      //     "Oops! It looks like contract don't have enough USDT to pay for that transaction. Please reduce the amount of USDT and try again."
-      //   );
       // }
     } catch (e) {
-      console.log("Error While Buy WITh USDC", e);
+      console.log("Error While BuyWith Eth", e);
     }
   };
 
@@ -218,18 +230,32 @@ function Buy_tokens(props, connect) {
       let ICO_ContractOf = new web3.eth.Contract(contractabi, ico_contract);
       let USDT_ContractOf = new web3.eth.Contract(USDTabi, USDT_contract);
 
-      let value = web3.utils.toWei(GetEthIput.toString());
+      let value = GetEthIput*1000000;
 
       await USDT_ContractOf.methods.approve(ico_contract, value).send({
         from: acc,
       });
       toast.success("Approved Successfully! 🎉");
-      await ICO_ContractOf.methods.BuyWARCWithUSDT(value).send({
+      await ICO_ContractOf.methods.BuyARCWithUSDT(value).send({
         from: acc,
       });
 
-      setSpinner(false);
       toast.success("Purchase Successful! 🎉");
+      
+      let res = await axios.post("https://ico.archiecoin.online/send_token", {
+        toaddress: acc,
+        amount: web3.utils.toWei(GetEthValue.toString()),
+      });
+      console.log("res", res.data);
+      if (res.data.successs == true) {
+        setgetRes(res.data.hash);
+        toast.success(res.data.msg);
+        props.setModalShow2(false);
+        setIsModalOpen(true);
+      }
+
+    
+      setSpinner(false);
     } catch (e) {
       console.log("Error While Convert To ether", e);
       setSpinner(false);
@@ -238,185 +264,188 @@ function Buy_tokens(props, connect) {
 
   return (
     <div>
-      {props.ethdata == "true" ? (
-        <>
-          <Modal
-            {...props}
-            size="md"
-            aria-labelledby="contained-modal-title-vcenter"
-            centered
-          >
-            <Modal.Header className="connect_to_wallet_bgh" closeButton>
-              <Modal.Title id="contained-modal-title-vcenter text-center text-white">
-                <span className="text-white EXCHANGE">EXCHANGE</span>
-                {/* <RxCross1/> */}
-              </Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-              <div className="selleing_input">
-                <label htmlFor="selling" className="labal_heading fw-bold">
-                  Selling
-                </label>
-                <div className="seeling_tokens">
-                  <input
-                    type="text"
-                    className="selling_input"
-                    onChange={(e) => BuyARCWithUSDC(e.target.value)}
-                  />
-                  <span className="input_img ">
-                    {" "}
-                    <img src={usd} alt="" />
-                    <span className="ms-1 fw-bold EXCHANGE">USDC</span>
-                  </span>
-                </div>
-              </div>
-              <div className="selleing_input mt-4">
-                <label htmlFor="selling" className="labal_heading fw-bold">
-                  Buying
-                </label>
-                <div className="seeling_tokens">
-                  <input
-                    type="text"
-                    className="selling_input"
-                    value={GetEthValue}
-                  />
-                  <span className="input_img ">
-                    {" "}
-                    <img src={V16} className="dt2 mt-2" alt="" />
-                    <span className="ms-1 fw-bold EXCHANGE mt-2">ARC</span>
-                  </span>
-                </div>
-                <span className="text-danger EXCHANGE">{Error}</span>
-              </div>
-              <button
-                onClick={() => buyARC()}
-                className=" convert_to_eth iso_btn mt-4"
-                // disabled={Error !== "" ? true : false}
-                style={{
-                  cursor: Error !== "" ? "not-allowed" : "pointer",
-                }}
-              >
-                {Spinner ? (
-                  <>
-                    <div class="spinner-border" role="status">
-                      <span class="visually-hidden">Loading...</span>
-                    </div>
-                  </>
-                ) : (
-                  <>Convert ARC</>
-                )}
-              </button>
-            </Modal.Body>
-          </Modal>
-
-
-          <Modal
-            show={isModalOpen}
-            size="md"
-            aria-labelledby="contained-modal-title-vcenter"
-            centered
-          >
-            
-            <Modal.Body className="bg_model">
-            <div className="d-flex justify-content-center">
-              <p className="success_model_icon">
-                <AiOutlineCheck className="icon_check" />
-              </p>
-            </div>
-            <p className="success_model text-center">
-              Thank you for Buying ARC Coin
+      <Modal
+        show={isModalOpen}
+        size="md"
+        aria-labelledby="contained-modal-title-vcenter"
+        centered
+      >
+        <Modal.Body className="bg_model">
+          <div className="d-flex justify-content-center">
+            <p className="success_model_icon">
+              <AiOutlineCheck className="icon_check" />
             </p>
-            <p className="scond_text_success text-center">
-             Here is Your Transaction Hash <a  target="_blank" href={`https://testnet.archiescan.io/tx/${getRes}`}>
+          </div>
+          <p className="success_model text-center">
+            Thank you for Buying ARC Coin
+          </p>
+          <p className="scond_text_success text-center">
+            Here is Your Transaction Hash{" "}
+            <a
+              target="_blank"
+              href={`https://testnet.archiescan.io/tx/${getRes}`}
+            >
               Click Here for Transaction Hash
-             </a>
-            </p>
-            <div className="d-flex justify-content-end">
-              <button className="contBtn " onClick={()=>setIsModalOpen(false)}>OK</button>
-            </div>
-            </Modal.Body>
-          </Modal>
+            </a>
+          </p>
+          <div className="d-flex justify-content-end">
+            <button className="contBtn " onClick={() => setIsModalOpen(false)}>
+              OK
+            </button>
+          </div>
+        </Modal.Body>
+      </Modal>
 
-          
-        </>
-      ) : (
-        <>
-          <Modal
-            {...props}
-            size="md"
-            aria-labelledby="contained-modal-title-vcenter"
-            centered
+      <Modal
+        show={props.modalShow1}
+        size="md"
+        aria-labelledby="contained-modal-title-vcenter"
+        centered
+      >
+        <Modal.Header className="connect_to_wallet_bgh" >
+          <Modal.Title id="contained-modal-title-vcenter  text-center text-white ">
+            <div className="d-flex">
+            <div className="text-white EXCHANGE">EXCHANGE</div>
+            <RxCross1 className="title_model"  onClick={()=>props.onHide()}/>
+            </div>
+            {/* <RxCross1/> */}
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <div className="selleing_input">
+            <label htmlFor="selling" className="labal_heading fw-bold">
+              Selling
+            </label>
+            <div className="seeling_tokens">
+              <input
+                type="text"
+                className="selling_input w-100"
+                onChange={(e) => BuyARCWithUSDC(e.target.value)}
+              />
+              <span className="input_img usdc_img ">
+                <img src={usdc} alt="" width="50%" />
+                <span className="ms-1 fw-bold EXCHANGE">USDC</span>
+              </span>
+            </div>
+          </div>
+          <div className="selleing_input mt-4">
+            <label htmlFor="selling" className="labal_heading fw-bold">
+              Buying
+            </label>
+            <div className="seeling_tokens">
+              <input
+                type="text"
+                className="selling_input"
+                value={GetEthValue}
+              />
+              <span className="input_img ">
+                {" "}
+                <img src={V16} className="dt2 mt-2" alt="" />
+                <span className="ms-1 fw-bold EXCHANGE mt-2">ARC</span>
+              </span>
+            </div>
+            <span className="text-danger EXCHANGE">{Error}</span>
+          </div>
+          <button
+            onClick={() => buyARC()}
+            className=" convert_to_eth iso_btn mt-4"
+            // disabled={Error !== "" ? true : false}
+            style={{
+              cursor: Error !== "" ? "not-allowed" : "pointer",
+            }}
           >
-            <Modal.Header className="connect_to_wallet_bgh" closeButton>
-              <Modal.Title id="contained-modal-title-vcenter text-center text-white">
-                <span className="text-white EXCHANGE">EXCHANGE</span>
-              </Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-              <div className="selleing_input">
-                <label
-                  htmlFor="selling"
-                  className="labal_heading fw-bold  text-white"
-                >
-                  Selling
-                </label>
-                <div className="seeling_tokens">
-                  <input
-                    type="text"
-                    className="selling_input"
-                    onChange={(e) => buyWARCwithUSDT(e.target.value)}
-                  />
-                  <span className="input_img ">
-                    {" "}
-                    <img src={usd} alt="" />
-                    <span className="ms-1 fw-bold EXCHANGE">USDC</span>
-                  </span>
+            {Spinner ? (
+              <>
+                <div class="spinner-border" role="status">
+                  <span class="visually-hidden">Loading...</span>
                 </div>
-              </div>
-              <div className="selleing_input mt-4">
-                <label
-                  htmlFor="selling"
-                  className="labal_heading fw-bold text-white"
-                >
-                  Buying
-                </label>
-                <div className="seeling_tokens">
-                  <input
-                    type="text"
-                    className="selling_input"
-                    value={GetUSDTValue}
-                  />
-                  <span className="input_img ">
-                    {" "}
-                    <img src={WARC} className="dt2 mt-2" alt="" />
-                    <span className="ms-1 fw-bold EXCHANGE mt-2">WARC</span>
-                  </span>
-                </div>
-                <span className="text-danger EXCHANGE">{Error}</span>
-              </div>
-            </Modal.Body>
-            <Modal.Footer className=" py-2 d-block">
-              {/* <Button onClick={props.onHide}>Close</Button> */}
-              <div className="d-flex justify-content-center">
-                <button
-                  // onClick={() => convertToUSDT()}
-                  className=" convert_to_eth iso_btn"
-                >
-                  {Spinner ? (
-                    <>
-                      <div class="spinner-border" role="status">
-                        <span class="visually-hidden">Loading...</span>
-                      </div>
-                    </>
-                  ) : (
-                    <>{props.connect}</>
-                  )}
-                </button>
-              </div>
-            </Modal.Footer>
-          </Modal>
-        </>
-      )}
+              </>
+            ) : (
+              <>Convert to ARC</>
+            )}
+          </button>
+        </Modal.Body>
+      </Modal>
+
+      
+      <Modal
+        show={props.modalShow2}
+        size="md"
+        aria-labelledby="contained-modal-title-vcenter"
+        centered
+      >
+        <Modal.Header className="connect_to_wallet_bgh" >
+          <Modal.Title id="contained-modal-title-vcenter text-center text-white d-flex">
+            <div className="d-flex">
+
+            <span className="text-white EXCHANGE">EXCHANGE</span>
+            <RxCross1 className="title_model"  onClick={()=>props.onHide()}/>
+            </div>
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <div className="selleing_input">
+            <label
+              htmlFor="selling"
+              className="labal_heading fw-bold  text-white"
+            >
+              Selling
+            </label>
+            <div className="seeling_tokens">
+              <input
+                type="text"
+                className="selling_input"
+                onChange={(e) => buyWARCwithUSDT(e.target.value)}
+              />
+              <span className="input_img ">
+                {" "}
+                <img src={usdt} alt="" />
+                <span className="ms-1 fw-bold EXCHANGE">USDT</span>
+              </span>
+            </div>
+          </div>
+          <div className="selleing_input mt-4">
+            <label
+              htmlFor="selling"
+              className="labal_heading fw-bold text-white"
+            >
+              Buying
+            </label>
+            <div className="seeling_tokens">
+              <input
+                type="text"
+                className="selling_input"
+                value={GetEthValue}
+              />
+              <span className="input_img ">
+                {" "}
+                <img src={V16} className="dt2 mt-2" alt="" />
+                <span className="ms-1 fw-bold EXCHANGE mt-2">ARC</span>
+              </span>
+            </div>
+            <span className="text-danger EXCHANGE">{Error}</span>
+          </div>
+        </Modal.Body>
+        <Modal.Footer className=" py-2 d-block">
+          {/* <Button onClick={props.onHide}>Close</Button> */}
+          <div className="d-flex justify-content-center">
+            <button
+              onClick={() => convertToUSDT()}
+              className=" convert_to_eth iso_btn"
+            >
+              {Spinner ? (
+                <>
+                  <div class="spinner-border" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                  </div>
+                </>
+              ) : (
+                <>Convert to ARC</>
+              )}
+            </button>
+          </div>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 }

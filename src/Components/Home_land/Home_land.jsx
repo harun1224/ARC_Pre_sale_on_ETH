@@ -13,7 +13,8 @@ import dog from "../Assets/bgDog.PNG";
 import {
   contractabi,
   ico_contract,
- 
+  USDCabi,
+  USDC_contract,
   USDTabi,
   USDT_contract,
 } from "../../Contracts/contract";
@@ -37,10 +38,12 @@ function Home_land() {
   const [modalShow1, setModalShow1] = React.useState(false);
   const [modalShow2, setModalShow2] = React.useState(false);
   const [usdt, setUSDT] = useState("--");
+  const [usdc, setusdc] = useState("--");
+
   const [ETH, setETH] = useState("--");
   const [TokenPercentce, setTokenPercent] = useState("--");
-
-
+  const [modalShow_USDT, setModalShow_USDT] = React.useState(false);
+  const [modalShow_USDT2, setModalShow_USDT2] = React.useState(false);
 
   const [contset, setcontset] = useState(false);
   const [modalShow5, setModalShow5] = useState(false);
@@ -54,9 +57,7 @@ function Home_land() {
   const dispatch = useDispatch();
 
   const getaccount = async () => {
-    const webSupply = new Web3(
-      "https://rpc.ankr.com/eth_goerli"
-    );
+    const webSupply = new Web3("https://rpc.ankr.com/eth_goerli");
     // let acc = await loadWeb3();
     if (acc == "No Wallet") {
       // toast.error('please install metamask')
@@ -73,12 +74,12 @@ function Home_land() {
 
       let ICOContractOf = new web3.eth.Contract(contractabi, ico_contract);
       let USTContractOf = new web3.eth.Contract(USDTabi, USDT_contract);
-    
+      let USDCContractOf = new web3.eth.Contract(USDCabi, USDC_contract);
 
       let getUSDTValue = await USTContractOf.methods
         .balanceOf(ico_contract)
         .call();
-      let gettokenValue = await USTContractOf.methods
+      let gettokenValue = await USDCContractOf.methods
         .balanceOf(ico_contract)
         .call();
 
@@ -96,13 +97,14 @@ function Home_land() {
         }
       });
 
-      // let USDTvalue = (getUSDTValue / 1000000).toString();
-      let USDTvalue = web3.utils.fromWei(getUSDTValue);
+      let USDTvalue = (getUSDTValue / 1000000).toString();
+      // let USDTvalue = web3.utils.fromWei(getUSDTValue);
       USDTvalue = parseFloat(USDTvalue).toFixed(2);
-      let tokenvalue = web3.utils.fromWei(gettokenValue);
+      console.log("tokenvalue",gettokenValue);
+      let tokenvalue = gettokenValue/1000000;
 
-      // tokenpercentag1 = parseFloat(tokenpercentag1).toFixed(2);
-
+      tokenvalue = parseFloat(tokenvalue).toFixed(2);
+      setusdc(tokenvalue);
       setUSDT(USDTvalue);
       // console.log(USDTvalue, "USDTValue");
 
@@ -198,7 +200,8 @@ function Home_land() {
               <p className="home_land_para text-white">
                 Buy ARC and WARC With USDC token at a very discounted price in
                 the Presale. Swap USDC for ARC and WARC without any fees at the
-                lowest price. During the Presale the conversion rate is 8333 ARC per USDC .
+                lowest price. During the Presale the conversion rate is 8333 ARC
+                per USDC .
               </p>
               {/* <img src={dog} alt=""  className="dog_img" /> */}
               {/* <button  className="btn btn-success" onClick={()=>connectWallet()}>Connect </button> */}
@@ -223,7 +226,7 @@ function Home_land() {
                   />
                 </div>
                 <div className="progress_bar_nav mt-3">
-                  <h4 className="progress_number">{(TokenPercentce)}% SOLD</h4>
+                  <h4 className="progress_number">{TokenPercentce}% SOLD</h4>
                   <div className="lower_pro d-flex">
                     <div
                       className="upper_pro"
@@ -233,8 +236,8 @@ function Home_land() {
 
                   <div className="usdt_contntet text-white text-bold">
                     <span>
-                      USDC Raised: <br />
-                      {usdt} $ / {ETH} ARC
+                      USDC/USDT Raised: <br />
+                      {usdc} USDC / {usdt} USDT
                     </span>
                   </div>
 
@@ -253,13 +256,13 @@ function Home_land() {
                           class="btn btn-eth crypto-btn my-1 py-2 px-1 w-80 my-2"
                           onClick={() => setModalShow1(true)}
                         >
-                          <img _ngcontent-bhd-c59="" src={WARC} height="40" />
-                          <span _ngcontent-bhd-c59="">Buy ARC</span>
+                          <img _ngcontent-bhd-c59="" src={V16} height="40" />
+                          <span _ngcontent-bhd-c59="">Buy ARC With USDC</span>
                         </button>
 
                         <Buy_tokens
-                          connect="Convert ARC"
-                          show={modalShow1}
+                          connect="Convert ARC With USDC"
+                          modalShow1={modalShow1}
                           onHide={() => setModalShow1(false)}
                           ethdata="true"
                           setModalShow1={setModalShow1}
@@ -269,10 +272,28 @@ function Home_land() {
                         <button
                           _ngcontent-bhd-c59=""
                           class="btn btn-eth crypto-btn my-1 py-2 px-1 w-80 my-2"
+                          onClick={() => setModalShow2(true)}
+                        >
+                          <img _ngcontent-bhd-c59="" src={V16} height="40" />
+                          <span _ngcontent-bhd-c59="">Buy ARC With USDT</span>
+                        </button>
+
+                        <Buy_tokens
+                          connect="Convert to ARC"
+                          modalShow2={modalShow2}
+                          onHide={() => setModalShow2(false)}
+                          ethdata="false"
+                          setModalShow2={setModalShow2}
+                        />
+                      </div>
+                      <div className="d-flex justify-content-center my-4">
+                        <button
+                          _ngcontent-bhd-c59=""
+                          class="btn btn-eth crypto-btn my-1 py-2 px-1 w-80 my-2"
                           style={{ background: comingText.btnColor }}
                           onClick={() => ComingSoon()}
                         >
-                          <img _ngcontent-bhd-c59="" src={V16} height="40" />
+                          <img _ngcontent-bhd-c59="" src={WARC} height="40" />
                           <span _ngcontent-bhd-c59="">{comingText.text}</span>
                         </button>
 
