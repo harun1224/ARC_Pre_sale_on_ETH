@@ -26,7 +26,6 @@ import WARC from "../Assets/WARC.png";
 import { useSelector } from "react-redux";
 import axios from "axios";
 
-
 function Buy_tokens(props, { ethdata }) {
   let { provider, acc, providerType, web3 } = useSelector(
     (state) => state.connectWallet
@@ -121,7 +120,7 @@ function Buy_tokens(props, { ethdata }) {
       let ICO_ContractOf = new web3.eth.Contract(contractabi, ico_contract);
       let USDC_ContractOf = new web3.eth.Contract(USDCabi, USDC_contract);
 
-      let value = GetEthIput*1000000;
+      let value = GetEthIput * 1000000;
 
       await USDC_ContractOf.methods
         .approve(ico_contract, value.toString())
@@ -230,7 +229,7 @@ function Buy_tokens(props, { ethdata }) {
       let ICO_ContractOf = new web3.eth.Contract(contractabi, ico_contract);
       let USDT_ContractOf = new web3.eth.Contract(USDTabi, USDT_contract);
 
-      let value = GetEthIput*1000000;
+      let value = GetEthIput * 1000000;
 
       await USDT_ContractOf.methods.approve(ico_contract, value).send({
         from: acc,
@@ -241,7 +240,7 @@ function Buy_tokens(props, { ethdata }) {
       });
 
       toast.success("Purchase Successful! 🎉");
-      
+
       let res = await axios.post("https://ico.archiecoin.online/send_token", {
         toaddress: acc,
         amount: web3.utils.toWei(GetEthValue.toString()),
@@ -254,7 +253,6 @@ function Buy_tokens(props, { ethdata }) {
         setIsModalOpen(true);
       }
 
-    
       setSpinner(false);
     } catch (e) {
       console.log("Error While Convert To ether", e);
@@ -302,11 +300,14 @@ function Buy_tokens(props, { ethdata }) {
         aria-labelledby="contained-modal-title-vcenter"
         centered
       >
-        <Modal.Header className="connect_to_wallet_bgh" >
+        <Modal.Header className="connect_to_wallet_bgh">
           <Modal.Title id="contained-modal-title-vcenter  text-center text-white ">
             <div className="d-flex">
-            <div className="text-white EXCHANGE">EXCHANGE</div>
-            <RxCross1 className="title_model"  onClick={()=>props.onHide()}/>
+              <div className="text-white EXCHANGE">EXCHANGE</div>
+              <RxCross1
+                className="title_model"
+                onClick={() => props.onHide()}
+              />
             </div>
             {/* <RxCross1/> */}
           </Modal.Title>
@@ -367,19 +368,20 @@ function Buy_tokens(props, { ethdata }) {
         </Modal.Body>
       </Modal>
 
-      
       <Modal
         show={props.modalShow2}
         size="md"
         aria-labelledby="contained-modal-title-vcenter"
         centered
       >
-        <Modal.Header className="connect_to_wallet_bgh" >
+        <Modal.Header className="connect_to_wallet_bgh">
           <Modal.Title id="contained-modal-title-vcenter text-center text-white d-flex">
             <div className="d-flex">
-
-            <span className="text-white EXCHANGE">EXCHANGE</span>
-            <RxCross1 className="title_model"  onClick={()=>props.onHide()}/>
+              <span className="text-white EXCHANGE">EXCHANGE</span>
+              <RxCross1
+                className="title_model"
+                onClick={() => props.onHide()}
+              />
             </div>
           </Modal.Title>
         </Modal.Header>

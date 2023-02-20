@@ -83,19 +83,26 @@ function Home_land() {
         .balanceOf(ico_contract)
         .call();
 
-      web3.eth.getBalance(ico_contract.toString(), function (err, result) {
-        if (err) {
-          console.log(err);
-        } else {
-          setBalanceEth(web3.utils.fromWei(result, "ether"));
-          let tokenpercentag = (web3.utils.fromWei(result, "ether") / 833300000) * 100;
-
-          // console.log("BalanceEth", typeof tokenpercentag);
-
-          let tokenpercentag1 = 100.0 - tokenpercentag;
+        let arcSold= await ICOContractOf.methods.ARC_Sold().call()
+        arcSold= web3.utils.fromWei(arcSold.toString())
+        console.log("arcSold",arcSold);
+        let tokenpercentag = (arcSold / 833300000) * 100;
+          let tokenpercentag1 =  tokenpercentag;
           setTokenPercent(parseFloat(tokenpercentag1).toFixed(2));
-        }
-      });
+
+      // web3.eth.getBalance(ico_contract.toString(), function (err, result) {
+      //   if (err) {
+      //     console.log(err);
+      //   } else {
+      //     setBalanceEth(web3.utils.fromWei(result, "ether"));
+      //     let tokenpercentag = (web3.utils.fromWei(result, "ether") / 833300000) * 100;
+
+      
+
+      //     let tokenpercentag1 = 100.0 - tokenpercentag;
+      //     setTokenPercent(parseFloat(tokenpercentag1).toFixed(2));
+      //   }
+      // });
 
       let USDTvalue = (getUSDTValue / 1000000).toString();
       // let USDTvalue = web3.utils.fromWei(getUSDTValue);
@@ -195,13 +202,12 @@ function Home_land() {
           <div className="row">
             <div className="col-md-7 left_connent text-start">
               <h1 className="main_home_heading text-white">
-                Welcome to the PreSale of <br /> ARC Coin and WARC
+              Welcome to the PreSale of <br /> ARC Coin and WARC on Ethereum Chain
               </h1>
               <p className="home_land_para text-white">
-                Buy ARC and WARC With USDC token at a very discounted price in
-                the Presale. Swap USDC for ARC and WARC without any fees at the
-                lowest price. During the Presale the conversion rate is 8333 ARC
-                per USDC .
+                Buy ARC and WARC With USDC and USDT token at a very discounted price in
+                the Presale. Swap USDC and USDT for ARC and WARC without any fees at the
+                lowest price. During the Presale the conversion rate is 8333 ARC per USDC/USDT.
               </p>
               {/* <img src={dog} alt=""  className="dog_img" /> */}
               {/* <button  className="btn btn-success" onClick={()=>connectWallet()}>Connect </button> */}
