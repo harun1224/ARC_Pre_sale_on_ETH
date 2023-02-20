@@ -14,8 +14,7 @@ import { AiFillWarning, AiOutlineCheck } from "react-icons/ai";
 import {
   contractabi,
   ico_contract,
-  WARC_Contract,
-  WARC_ABI,
+
   USDTabi,
   USDT_contract,
 } from "../../Contracts/contract";
@@ -156,7 +155,7 @@ function Buy_tokens(props, connect) {
     try {
       const web3 = window.web3;
       let ICO_ContractOf = new web3.eth.Contract(contractabi, ico_contract);
-      let TokenContractOf = new web3.eth.Contract(WARC_ABI, WARC_Contract);
+      let TokenContractOf 
       let USDTContractOf = new web3.eth.Contract(USDTabi, USDT_contract);
 
       let value = web3.utils.toWei(data.toString());
@@ -400,7 +399,7 @@ function Buy_tokens(props, connect) {
               {/* <Button onClick={props.onHide}>Close</Button> */}
               <div className="d-flex justify-content-center">
                 <button
-                  onClick={() => convertToUSDT()}
+                  // onClick={() => convertToUSDT()}
                   className=" convert_to_eth iso_btn"
                 >
                   {Spinner ? (

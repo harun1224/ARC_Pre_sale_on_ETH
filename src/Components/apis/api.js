@@ -10,7 +10,7 @@ const networks = {
       symbol: "GoerliETH",
       decimals: 18,
     },
-    rpcUrls: ["https://goerli.infura.io/v3/"],
+    rpcUrls: ["https://goerli.blockpi.network/v1/rpc/public"],
     blockExplorerUrls: ["https://goerli.etherscan.io/"],
   },
 };
@@ -61,7 +61,7 @@ export const loadWeb3 = async () => {
             isItConnected = true;
             break;
           default:
-            handleNetworkSwitch("bsc");
+            handleNetworkSwitch("GoerliETH");
             isItConnected = false;
         }
       });

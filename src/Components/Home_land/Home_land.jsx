@@ -13,8 +13,7 @@ import dog from "../Assets/bgDog.PNG";
 import {
   contractabi,
   ico_contract,
-  WARC_ABI,
-  WARC_Contract,
+ 
   USDTabi,
   USDT_contract,
 } from "../../Contracts/contract";
@@ -56,7 +55,7 @@ function Home_land() {
 
   const getaccount = async () => {
     const webSupply = new Web3(
-      "https://data-seed-prebsc-1-s1.binance.org:8545"
+      "https://rpc.ankr.com/eth_goerli"
     );
     // let acc = await loadWeb3();
     if (acc == "No Wallet") {
@@ -74,7 +73,7 @@ function Home_land() {
 
       let ICOContractOf = new web3.eth.Contract(contractabi, ico_contract);
       let USTContractOf = new web3.eth.Contract(USDTabi, USDT_contract);
-      let tokenContractOf = new web3.eth.Contract(WARC_ABI, WARC_Contract);
+    
 
       let getUSDTValue = await USTContractOf.methods
         .balanceOf(ico_contract)
