@@ -125,39 +125,63 @@ function Buy_tokens(props, { ethdata }) {
 
       let value = GetEthIput * 1000000;
 
-      await USDC_ContractOf.methods
-        .approve(ico_contract, value.toString())
-        .send({
-          from: acc,
-        });
-      toast.success("Approved Successfully! 🎉");
       let WL_Acces = await ICO_ContractOf.methods.WL_Acces().call();
       // console.log("WL_Acces", WL_Acces);
       if (WL_Acces == true) {
         let Find = address.indexOf(acc);
-        let getProof = Proof[Find];
-        console.log("Find", getProof);
-        await ICO_ContractOf.methods.BuyARCWithUSDC(value, getProof).send({
-          from: acc,
-        });
-        toast.success("Amount Deposited! 🎉");
+        if (Find == -1) {
+          toast.error("You are Not WhiteListed For Early Access!");
+          setSpinner(false);
+        } else {
+          let getProof = Proof[Find];
+          console.log("Find", getProof);
+          await USDC_ContractOf.methods
+            .approve(ico_contract, value.toString())
+            .send({
+              from: acc,
+            });
+          toast.success("Approved Successfully! 🎉");
+          await ICO_ContractOf.methods.BuyARCWithUSDC(value, getProof).send({
+            from: acc,
+          });
+          toast.success("Amount Deposited! 🎉");
+          let res = await axios.post(
+            "https://ico.archiecoin.online/send_token",
+            {
+              toaddress: acc,
+              amount: web3.utils.toWei(GetEthValue.toString()),
+            }
+          );
+          console.log("res", res.data);
+          if (res.data.successs == true) {
+            setgetRes(res.data.hash);
+            toast.success(res.data.msg);
+            props.setModalShow1(false);
+            setIsModalOpen(true);
+          }
+        }
       } else {
+        await USDC_ContractOf.methods
+          .approve(ico_contract, value.toString())
+          .send({
+            from: acc,
+          });
+        toast.success("Approved Successfully! 🎉");
         await ICO_ContractOf.methods.BuyARCWithUSDC(value, ["0x"]).send({
           from: acc,
         });
         toast.success("Amount Deposited! 🎉");
-      }
-
-      let res = await axios.post("https://ico.archiecoin.online/send_token", {
-        toaddress: acc,
-        amount: web3.utils.toWei(GetEthValue.toString()),
-      });
-      console.log("res", res.data);
-      if (res.data.successs == true) {
-        setgetRes(res.data.hash);
-        toast.success(res.data.msg);
-        props.setModalShow1(false);
-        setIsModalOpen(true);
+        let res = await axios.post("https://ico.archiecoin.online/send_token", {
+          toaddress: acc,
+          amount: web3.utils.toWei(GetEthValue.toString()),
+        });
+        console.log("res", res.data);
+        if (res.data.successs == true) {
+          setgetRes(res.data.hash);
+          toast.success(res.data.msg);
+          props.setModalShow1(false);
+          setIsModalOpen(true);
+        }
       }
 
       setSpinner(false);
@@ -246,39 +270,62 @@ function Buy_tokens(props, { ethdata }) {
 
       let value = GetEthIput * 1000000;
 
-      await USDT_ContractOf.methods.approve(ico_contract, value).send({
-        from: acc,
-      });
-      toast.success("Approved Successfully! 🎉");
       let WL_Acces = await ICO_ContractOf.methods.WL_Acces().call();
-      // console.log("WL_Acces", WL_Acces);
       if (WL_Acces == true) {
         let Find = address.indexOf(acc);
-        let getProof = Proof[Find];
-        console.log("Find", getProof);
-        await ICO_ContractOf.methods.BuyARCWithUSDT(value, getProof).send({
+        console.log("Find", Find);
+        if (Find == -1) {
+          toast.error("You are Not WhiteListed For Early Access!");
+          setSpinner(false);
+        } else {
+          let getProof = Proof[Find];
+          await USDT_ContractOf.methods.approve(ico_contract, value).send({
+            from: acc,
+          });
+          toast.success("Approved Successfully! 🎉");
+
+          await ICO_ContractOf.methods.BuyARCWithUSDT(value, getProof).send({
+            from: acc,
+          });
+
+          toast.success("Purchase Successful! 🎉");
+          let res = await axios.post(
+            "https://ico.archiecoin.online/send_token",
+            {
+              toaddress: acc,
+              amount: web3.utils.toWei(GetEthValue.toString()),
+            }
+          );
+          console.log("res", res.data);
+          if (res.data.successs == true) {
+            setgetRes(res.data.hash);
+            toast.success(res.data.msg);
+            props.setModalShow2(false);
+            setIsModalOpen(true);
+          }
+        }
+      } else {
+        await USDT_ContractOf.methods.approve(ico_contract, value).send({
           from: acc,
         });
+        toast.success("Approved Successfully! 🎉");
 
-        toast.success("Purchase Successful! 🎉");
-      } else {
         await ICO_ContractOf.methods.BuyARCWithUSDT(value, ["0x"]).send({
           from: acc,
         });
 
         toast.success("Purchase Successful! 🎉");
-      }
-
-      let res = await axios.post("https://ico.archiecoin.online/send_token", {
-        toaddress: acc,
-        amount: web3.utils.toWei(GetEthValue.toString()),
-      });
-      console.log("res", res.data);
-      if (res.data.successs == true) {
-        setgetRes(res.data.hash);
-        toast.success(res.data.msg);
-        props.setModalShow2(false);
-        setIsModalOpen(true);
+        let res = await axios.post("https://ico.archiecoin.online/send_token", {
+          toaddress: acc,
+          amount: web3.utils.toWei(GetEthValue.toString()),
+        });
+        console.log("res", res.data);
+        if (res.data.successs == true) {
+          setgetRes(res.data.hash);
+          toast.success(res.data.msg);
+          props.setModalShow2(false);
+          setIsModalOpen(true);
+        }
       }
 
       setSpinner(false);

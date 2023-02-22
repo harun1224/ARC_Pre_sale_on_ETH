@@ -42,7 +42,7 @@ function Home_land() {
 
   const [ETH, setETH] = useState("--");
   const [TokenPercentce, setTokenPercent] = useState("--");
-  const [modalShow_USDT, setModalShow_USDT] = React.useState(false);
+  const [checSale, setchecSale] = React.useState("--");
   const [modalShow_USDT2, setModalShow_USDT2] = React.useState(false);
 
   const [contset, setcontset] = useState(false);
@@ -75,6 +75,18 @@ function Home_land() {
       let ICOContractOf = new web3.eth.Contract(contractabi, ico_contract);
       let USTContractOf = new web3.eth.Contract(USDTabi, USDT_contract);
       let USDCContractOf = new web3.eth.Contract(USDCabi, USDC_contract);
+      let sale= await ICOContractOf.methods.WL_Acces().call()
+      let P_sale= await ICOContractOf.methods.presaleStatus().call()
+
+      if(sale==true  && P_sale==false ){
+        setchecSale("WL Early Access")
+      }else if(sale==false && P_sale==true ) {
+        setchecSale("Public Sale")
+
+      }else{
+        setchecSale("Undefine")
+        
+      }
 
       let getUSDTValue = await USTContractOf.methods
         .balanceOf(ico_contract)
@@ -243,7 +255,7 @@ function Home_land() {
 
                   <div className="usdt_contntet text-white text-bold">
                     <span>
-                      USDC/USDT Raised: <br />
+                      Sale Type : {checSale}  <br />
                       {usdc} USDC / {usdt} USDT
                     </span>
                   </div>
