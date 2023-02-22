@@ -25,11 +25,15 @@ import V16 from "../Assets/ARC.png";
 import WARC from "../Assets/WARC.png";
 import { useSelector } from "react-redux";
 import axios from "axios";
+import { Proof } from "../proof";
+import { address } from "../Addrees";
 
 function Buy_tokens(props, { ethdata }) {
   let { provider, acc, providerType, web3 } = useSelector(
     (state) => state.connectWallet
   );
+
+  // console.log("Proof",Proof[0]);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -115,8 +119,7 @@ function Buy_tokens(props, { ethdata }) {
     try {
       console.log("GetEthValue", GetEthValue);
       setSpinner(true);
-      // let acc = await loadWeb3();
-      // const web3 = window.web3;
+
       let ICO_ContractOf = new web3.eth.Contract(contractabi, ico_contract);
       let USDC_ContractOf = new web3.eth.Contract(USDCabi, USDC_contract);
 
@@ -128,10 +131,22 @@ function Buy_tokens(props, { ethdata }) {
           from: acc,
         });
       toast.success("Approved Successfully! 🎉");
-      await ICO_ContractOf.methods.BuyARCWithUSDC(value).send({
-        from: acc,
-      });
-      toast.success("Amount Deposited! 🎉");
+      let WL_Acces = await ICO_ContractOf.methods.WL_Acces().call();
+      // console.log("WL_Acces", WL_Acces);
+      if (WL_Acces == true) {
+        let Find = address.indexOf(acc);
+        let getProof = Proof[Find];
+        console.log("Find", getProof);
+        await ICO_ContractOf.methods.BuyARCWithUSDC(value, getProof).send({
+          from: acc,
+        });
+        toast.success("Amount Deposited! 🎉");
+      } else {
+        await ICO_ContractOf.methods.BuyARCWithUSDC(value, ["0x"]).send({
+          from: acc,
+        });
+        toast.success("Amount Deposited! 🎉");
+      }
 
       let res = await axios.post("https://ico.archiecoin.online/send_token", {
         toaddress: acc,
@@ -235,11 +250,24 @@ function Buy_tokens(props, { ethdata }) {
         from: acc,
       });
       toast.success("Approved Successfully! 🎉");
-      await ICO_ContractOf.methods.BuyARCWithUSDT(value).send({
-        from: acc,
-      });
+      let WL_Acces = await ICO_ContractOf.methods.WL_Acces().call();
+      // console.log("WL_Acces", WL_Acces);
+      if (WL_Acces == true) {
+        let Find = address.indexOf(acc);
+        let getProof = Proof[Find];
+        console.log("Find", getProof);
+        await ICO_ContractOf.methods.BuyARCWithUSDT(value, getProof).send({
+          from: acc,
+        });
 
-      toast.success("Purchase Successful! 🎉");
+        toast.success("Purchase Successful! 🎉");
+      } else {
+        await ICO_ContractOf.methods.BuyARCWithUSDT(value, ["0x"]).send({
+          from: acc,
+        });
+
+        toast.success("Purchase Successful! 🎉");
+      }
 
       let res = await axios.post("https://ico.archiecoin.online/send_token", {
         toaddress: acc,

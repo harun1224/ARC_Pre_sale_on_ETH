@@ -79,15 +79,16 @@ function Home_land() {
       let getUSDTValue = await USTContractOf.methods
         .balanceOf(ico_contract)
         .call();
+
       let gettokenValue = await USDCContractOf.methods
         .balanceOf(ico_contract)
         .call();
 
         let arcSold= await ICOContractOf.methods.ARC_Sold().call()
         arcSold= web3.utils.fromWei(arcSold.toString())
-        console.log("arcSold",arcSold);
         let tokenpercentag = (arcSold / 833300000) * 100;
-          let tokenpercentag1 =  tokenpercentag;
+        let tokenpercentag1 =  tokenpercentag;
+
           setTokenPercent(parseFloat(tokenpercentag1).toFixed(2));
 
       // web3.eth.getBalance(ico_contract.toString(), function (err, result) {
