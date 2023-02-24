@@ -55,7 +55,7 @@ export default function DashBoard() {
                 <svg>
                   <rect x="0" y="0" fill="none" width="100%" height="100%" />
                 </svg>
-                USDC (ERC20)
+                USDT (ERC20)
               </div>
             </Link>
           </div>
@@ -66,7 +66,7 @@ export default function DashBoard() {
                 <svg>
                   <rect x="0" y="0" fill="none" width="100%" height="100%" />
                 </svg>
-                BUSD (BEP20)
+                USDC (BEP20)
               </div>
             </Link>
           </div>
