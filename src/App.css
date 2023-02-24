@@ -6,37 +6,49 @@
   font-family: 'Mina', sans-serif !important;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.App{
+  background-image: url('./Components//Assets/background2.png') !important;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  z-index: 0 !important;
+  position: relative;
+  height: 140vh;
+  /* font-family: 'Chakra Petch', sans-serif !important; */
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.overlay{
+  width: 100%;
+  height: 140vh;
+  background: rgba(0, 0, 0, 0.5);
+  background-repeat:no-repeat;
+  background-size: cover;
+  position: absolute;
+  z-index: -1 !important;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+
+@media screen and (max-width:600px) {
+  
+.App{
+  background-image: url('./Components//Assets/background2.png') !important;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  z-index: 0 !important;
+  position: relative;
+  height: auto;
+  /* font-family: 'Chakra Petch', sans-serif !important; */
 }
 
-.App-link {
-  color: #61dafb;
+.overlay{
+  width: 100%;
+  height: auto;
+  background: rgba(0, 0, 0, 0.5);
+  background-repeat:no-repeat;
+  background-size: cover;
+  position: absolute;
+  z-index: -1 !important;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
 }

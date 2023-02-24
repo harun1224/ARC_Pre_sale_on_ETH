@@ -75,17 +75,15 @@ function Home_land() {
       let ICOContractOf = new web3.eth.Contract(contractabi, ico_contract);
       let USTContractOf = new web3.eth.Contract(USDTabi, USDT_contract);
       let USDCContractOf = new web3.eth.Contract(USDCabi, USDC_contract);
-      let sale= await ICOContractOf.methods.WL_Acces().call()
-      let P_sale= await ICOContractOf.methods.presaleStatus().call()
+      let sale = await ICOContractOf.methods.WL_Acces().call();
+      let P_sale = await ICOContractOf.methods.presaleStatus().call();
 
-      if(sale==true  && P_sale==false ){
-        setchecSale("WL Early Access")
-      }else if(sale==false && P_sale==true ) {
-        setchecSale("Public Sale")
-
-      }else{
-        setchecSale("Undefine")
-        
+      if (sale == true && P_sale == false) {
+        setchecSale("WL Early Access");
+      } else if (sale == false && P_sale == true) {
+        setchecSale("Public Sale");
+      } else {
+        setchecSale("Undefine");
       }
 
       let getUSDTValue = await USTContractOf.methods
@@ -96,12 +94,12 @@ function Home_land() {
         .balanceOf(ico_contract)
         .call();
 
-        let arcSold= await ICOContractOf.methods.ARC_Sold().call()
-        arcSold= web3.utils.fromWei(arcSold.toString())
-        let tokenpercentag = (arcSold / 833300000) * 100;
-        let tokenpercentag1 =  tokenpercentag;
+      let arcSold = await ICOContractOf.methods.ARC_Sold().call();
+      arcSold = web3.utils.fromWei(arcSold.toString());
+      let tokenpercentag = (arcSold / 833300000) * 100;
+      let tokenpercentag1 = tokenpercentag;
 
-          setTokenPercent(parseFloat(tokenpercentag1).toFixed(2));
+      setTokenPercent(parseFloat(tokenpercentag1).toFixed(2));
 
       // web3.eth.getBalance(ico_contract.toString(), function (err, result) {
       //   if (err) {
@@ -109,8 +107,6 @@ function Home_land() {
       //   } else {
       //     setBalanceEth(web3.utils.fromWei(result, "ether"));
       //     let tokenpercentag = (web3.utils.fromWei(result, "ether") / 833300000) * 100;
-
-      
 
       //     let tokenpercentag1 = 100.0 - tokenpercentag;
       //     setTokenPercent(parseFloat(tokenpercentag1).toFixed(2));
@@ -120,8 +116,8 @@ function Home_land() {
       let USDTvalue = (getUSDTValue / 1000000).toString();
       // let USDTvalue = web3.utils.fromWei(getUSDTValue);
       USDTvalue = parseFloat(USDTvalue).toFixed(2);
-      console.log("tokenvalue",gettokenValue);
-      let tokenvalue = gettokenValue/1000000;
+      console.log("tokenvalue", gettokenValue);
+      let tokenvalue = gettokenValue / 1000000;
 
       tokenvalue = parseFloat(tokenvalue).toFixed(2);
       setusdc(tokenvalue);
@@ -214,20 +210,19 @@ function Home_land() {
           </div>
           <div className="row">
             <div className="col-md-7 left_connent text-start">
-              <h1 className="main_home_heading text-white">
-              Welcome to the PreSale of <br /> ARC Coin and WARC on Ethereum Chain
+              <h1 className="main_home_heading1 text-white">
+                Welcome to the Pre-Sale of
+                <br />
+                Arc Coin on Archie Chain
               </h1>
-              <p className="home_land_para text-white">
-                Buy ARC and WARC With USDC and USDT token at a very discounted price in
-                the Presale. Swap USDC and USDT for ARC and WARC without any fees at the
-                lowest price. During the Presale the conversion rate is 8333 ARC per USDC/USDT.
+              <p className="home_land_para1  text-white">
+                Buy ARC with USDC and USDT on Ethereum Chain. WL Partners, please proceed with your choice of tokens to
+                buy. You have 2 Hours from the Pre-Sale opening
+                before general buyers. After your transaction completed, please
+                make sure you refer to the pdf to add the Archie Chain network
+                to show your coin in your wallet.
               </p>
-              {/* <img src={dog} alt=""  className="dog_img" /> */}
-              {/* <button  className="btn btn-success" onClick={()=>connectWallet()}>Connect </button> */}
-              {/* <div className="d-flex">
-              <img src={play} alt="" />
-              <h3 className="play_headig">Watch a short Explainer Video</h3>
-            </div> */}
+             
             </div>
 
             <div
@@ -255,7 +250,7 @@ function Home_land() {
 
                   <div className="usdt_contntet text-white text-bold">
                     <span>
-                      Sale Type : {checSale}  <br />
+                      Sale Type : {checSale} <br />
                       {usdc} USDC / {usdt} USDT
                     </span>
                   </div>
@@ -305,7 +300,7 @@ function Home_land() {
                           setModalShow2={setModalShow2}
                         />
                       </div>
-                      <div className="d-flex justify-content-center my-4">
+                      {/* <div className="d-flex justify-content-center my-4">
                         <button
                           _ngcontent-bhd-c59=""
                           class="btn btn-eth crypto-btn my-1 py-2 px-1 w-80 my-2"
@@ -322,7 +317,7 @@ function Home_land() {
                           onHide={() => setModalShow2(false)}
                           ethdata="false"
                         />
-                      </div>
+                      </div> */}
                       <div className="new_btn text-white">
                         <p>
                           {" "}

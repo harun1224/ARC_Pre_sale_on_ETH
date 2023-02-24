@@ -25,8 +25,8 @@ import V16 from "../Assets/ARC.png";
 import WARC from "../Assets/WARC.png";
 import { useSelector } from "react-redux";
 import axios from "axios";
-import { Proof } from "../proof";
-import { address } from "../Addrees";
+import { Proof } from "../../proof";
+import { address } from "../../Addrees";
 
 function Buy_tokens(props, { ethdata }) {
   let { provider, acc, providerType, web3 } = useSelector(
