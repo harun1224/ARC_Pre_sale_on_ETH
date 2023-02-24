@@ -8,6 +8,7 @@ import d2d from "../Assets/bdinulogo.png";
 import { RxCross1 } from "react-icons/rx";
 // import { Button, Modal } from "antd";
 import { AiFillWarning, AiOutlineCheck } from "react-icons/ai";
+import usdc from "../../../Components/Assets/usdc.png";
 
 import {
   contractabi,
@@ -364,8 +365,11 @@ function Buy_tokens(props, connect) {
               />
               <span className="input_img ">
                 {" "}
-                <img src={usd} alt="" />
+                <span className="input_img usdc_img ">
+                <img src={usdc} alt="" width="50%" />
                 <span className="ms-1 fw-bold EXCHANGE">USDC</span>
+              </span>
+        
               </span>
             </div>
           </div>

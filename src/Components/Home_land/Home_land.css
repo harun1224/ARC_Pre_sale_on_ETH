@@ -466,3 +466,13 @@
     width: 5rem;
    
 }
+
+@media screen and (max-width:600px) {
+    .title_model {
+        float: right !important;
+        margin-right: auto !important;
+        margin-left: 15rem !important;
+        cursor: pointer;
+    }
+    
+}
