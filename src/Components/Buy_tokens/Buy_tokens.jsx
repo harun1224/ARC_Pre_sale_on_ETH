@@ -303,7 +303,7 @@ function Buy_tokens(props, { ethdata }) {
             if (res.data.successs == true) {
               setgetRes(res.data.hash);
               toast.success(res.data.msg);
-              props.setModalShow1(false);
+              props.setModalShow2(false);
               setIsModalOpen(true);
             }
           }
@@ -326,7 +326,7 @@ function Buy_tokens(props, { ethdata }) {
           if (res.data.successs == true) {
             setgetRes(res.data.hash);
             toast.success(res.data.msg);
-            props.setModalShow1(false);
+            props.setModalShow2(false);
             setIsModalOpen(true);
           }
         }

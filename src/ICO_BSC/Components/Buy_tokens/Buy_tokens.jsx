@@ -262,7 +262,7 @@ function Buy_tokens(props, connect) {
     try {
       setSpinner(true);
       // let acc = await loadWeb3();
-      const web3 = window.web3;
+      // const web3 = window.web3;
       let ICO_ContractOf = new web3.eth.Contract(contractabi, ico_contract);
       let BUSD_ContractOf = new web3.eth.Contract(BUSDabi, BUSD_contract);
 
